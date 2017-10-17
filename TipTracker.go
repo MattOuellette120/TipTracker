@@ -7,7 +7,7 @@ import (
 
 var mileage float64 = 0.00
 var totalTips float64 = 0.00
-var tip float64
+var tip 
 
 func main () {
 	fmt.Println("What is the mileage rate?")
@@ -36,6 +36,9 @@ func main () {
 			fmt.Println("Invalid Input")
 			numOfDel--
 		}*/
+		if tip == "exit" {
+			break
+		}
 		totalTips += tip
 		fmt.Println(fmt.Sprintf("Total Tips: $%.2f", totalTips))
 		if numOfDel == 10 {
