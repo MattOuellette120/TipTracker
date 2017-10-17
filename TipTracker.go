@@ -7,7 +7,6 @@ import (
 
 var mileage float64 = 0.00
 var totalTips float64 = 0.00
-var shiftDone bool = false
 var tip float64
 
 func main () {
