@@ -2,24 +2,23 @@ package main
 
 import (
 	"fmt"
-	"reflect"
+	//"reflect"
 )
 
 var mileage float64 = 0.00
 var totalTips float64 = 0.00
-var numOfDel float64 = 1.00
 var shiftDone bool = false
+var tip float64
 
 func main () {
 	fmt.Println("What is the mileage rate?")
 	fmt.Scan(&mileage)
 	fmt.Println(fmt.Sprintf("Mileage is $%.2f", mileage))
 	fmt.Println("Input \"exit\" to end shift")
-	for ; shiftDone == true ; numOfDel++ {
-		fmt.Println(fmt.Sprintf("Enter the tip for delivery #%d", numOfDel))
-		var tip 
+	for numOfDel := 1.0 ; ; numOfDel++ {
+		fmt.Println(fmt.Sprintf("Enter the tip for delivery #%.0f", numOfDel))
 		fmt.Scan(&tip)
-		var tipType string = reflect.TypeOf(tip).String()
+/*		var tipType string = reflect.TypeOf(tip).String()
 		if tipType == "string" {
 			if tip == "exit" {
 				shiftDone = true
@@ -37,6 +36,13 @@ func main () {
 		} else {
 			fmt.Println("Invalid Input")
 			numOfDel--
+		}*/
+		totalTips += tip
+		fmt.Println(fmt.Sprintf("Total Tips: $%.2f", totalTips))
+		if numOfDel == 10 {
+			fmt.Println("End of shift")
+			fmt.Println(fmt.Sprintf("Number of deliveries: %.0f, Total Tips: $%.2f, Total Earnings: $%.2f", numOfDel, totalTips, totalTips+(mileage*numOfDel)))
+			break
 		}
 
 
