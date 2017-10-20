@@ -20,12 +20,19 @@ func main () {
 			fmt.Println("End of shift")
 			fmt.Println(fmt.Sprintf("Number of deliveries: %.0f, Total Tips: $%.2f, Total Earnings: $%.2f", numOfDel, totalTips, totalTips+(mileage*numOfDel)))
 			break
-		} else if tip, err := strconv.ParseFloat(tipString, 64); err == nil {
+		}
+		tip, err := strconv.ParseFloat(tipString, 64)
+		if err == nil {
 			totalTips += tip
 			fmt.Println(fmt.Sprintf("Total Tips: $%.2f", totalTips))
-			
+		} else {
+			fmt.Println("Invalid Input")
+			numOfDel--
 		}
 
 
 	}
 }
+
+
+
