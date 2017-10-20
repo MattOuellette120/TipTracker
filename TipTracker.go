@@ -33,7 +33,7 @@ func main () {
 		fmt.Println(fmt.Sprintf("Enter the tip for delivery #%.0f", numOfDel))
 		fmt.Scan(&tipString)
 		cleanTipString := strings.TrimPrefix(tipString, "$")		//Same with mileage input, trims off potential $'s
-		if tipString == "exit" {		//If "exit was entered, ends the loop and prints final totals
+		if tipString == "exit" {		//If "exit" was entered, ends the loop and prints final totals
 			numOfDel--		//Minus one, because it would use the current loop's number otherwise
 			fmt.Println("End of shift")
 			fmt.Println(fmt.Sprintf("Number of deliveries: %.0f, Total Tips: $%.2f, Total Mileage Earned: $%.2f, Total Earnings: $%.2f", numOfDel, totalTips, numOfDel*mileage, totalTips+(mileage*numOfDel)))
