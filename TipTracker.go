@@ -13,11 +13,11 @@ var tipString string
 
 func main () {
 	fmt.Println("\"Mileage\" refers to the amount of money, per delivery, a driver is given for gas compensation.") 
-	var mileage float64	//Declared milage outside the loop so it can be used in the final calculation
-	for {		//Mileage input loop
+	var mileage float64	//Declared mileage outside the loop so it can be used in the final calculation
+	for {		//Mileage input loop start
 		fmt.Println("How much is the current mileage?")
 		fmt.Scan(&mileageString)
-		cleanMileageString := strings.TrimPrefix(mileageString, "$")		//In case the user adds the $ to their input
+		cleanMileageString := strings.TrimPrefix(mileageString, "$")		//In case the user adds the $ to their input, trims $
 		m, err := strconv.ParseFloat(cleanMileageString, 64)
 		mileage = m		//Assigning the ParseFloat directly to mileage shadows the variable outside the loop
 		if err == nil {
@@ -25,7 +25,7 @@ func main () {
 		} else {
 			fmt.Println("Mileage must be in the form of a float. Mileage is usually between $1.20 and $1.30")	//Error handling
 		}
-	}
+	}		//Mileage input loop end
 	fmt.Println(fmt.Sprintf("Mileage is $%.2f", mileage))
 	fmt.Println("Enter \"exit\" to end shift")
 	
