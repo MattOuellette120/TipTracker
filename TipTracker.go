@@ -8,7 +8,7 @@ import (
 
 //Variable Declaration
 var inputString string
-var helpString = "Command list:\nhelp		Displays this help menu\nexit		Ends the shift and displays the final totals\nlist		Lists all current orders with ID and tip amount\ncancel		Allows user to cancel an order with its order ID. Cancelling an order sets the tip amount to $0"		//Help Menu
+var helpString = "\nCommand list:\nhelp		Displays this help menu\nexit		Ends the shift and displays the final totals\nlist		Lists all current orders with ID and tip amount\ncancel		Allows user to cancel an order with its order ID. Cancelling an order sets the tip amount to $0\n"		//Help Menu
 
 
 func main () {
@@ -25,11 +25,10 @@ func main () {
 		if err == nil {
 			break
 		} else {
-			fmt.Println("Mileage must be in the form of a float. Mileage is usually between $1.20 and $1.30")	//Error handling
+			fmt.Println("\nMileage must be in the form of a float. Mileage is usually between $1.20 and $1.30")	//Error handling
 		}
 	}		//Mileage input loop end
-	fmt.Println(fmt.Sprintf("Mileage is $%.2f", mileage))
-	fmt.Println("Enter \"help\" for command list, enter \"exit\" to end shift.")
+	fmt.Println("\nEnter \"help\" for command list, enter \"exit\" to end shift.")
 	
 	for {
 		fmt.Println("Enter the tip for delivery #", strconv.Itoa(len(orders)+1))
@@ -39,22 +38,22 @@ func main () {
 			case inputString == "exit":		//End shift and print totals
 				clockOut(orders, mileage)
 				break
-			case inputString == "help":		//Print out help menu
+			case inputString == "help":		//Display help menu
 				fmt.Println(helpString)
 				break
-			case inputString == "list":		//Print out list of orders
-				listOrders(orders)
+			case inputString == "list":		//Lists everything
+				listAll(mileage, orders)
 				break
 			case inputString == "cancel":		//Cancel an order using order's ID
-				fmt.Println("Here's a list of all deliveries made. Please input the order number of the delivery you want cancelled.")
+				fmt.Println("\nHere's a list of all deliveries made. Please input the order number of the delivery you want cancelled.")
 				listOrders(orders)
 				fmt.Scan(&inputString)
 				id, err := strconv.Atoi(inputString)
 				if err == nil {
 					cancelOrder(orders, id-1)
-					fmt.Println(fmt.Sprintf("Order has been cancelled\nNew Total Tips: $%.2f", getTotalTips(orders)))
+					fmt.Println(fmt.Sprintf("Order has been cancelled\nNew Total Tips: $%.2f\n", getTotalTips(orders)))
 				} else {
-					fmt.Println("Invalid Input")
+					fmt.Println("Invalid Input\n")
 				}
 				break
 			default:		//Append new order to orders slice setting tip and id
@@ -63,9 +62,9 @@ func main () {
 					id := len(orders)+1
 					newOrder := Order{tip, id}
 					orders = append(orders, newOrder)
-					fmt.Println(fmt.Sprintf("Total Tips: $%.2f", getTotalTips(orders)))		//Handy display of current total
+					fmt.Println(fmt.Sprintf("\nTotal Tips: $%.2f", getTotalTips(orders)))		//Handy display of current total
 				} else {
-					fmt.Println("Invalid Input")
+					fmt.Println("Invalid Input\n")
 				}
 		}		//End of switch case
 		if inputString == "exit" {
@@ -91,7 +90,7 @@ func cancelOrder(o []Order, id int) {		//Takes in the orders slice and id, sets 
 
 func clockOut (o []Order, m float64) {		//Clock Out function
 		t := getTotalTips(o)
-		fmt.Println(fmt.Sprintf("Shift Complete!\nTotal Deliveries: %d, Total Tips: $%.2f, Total Earning: $%.2f", len(o), t, t+(float64(len(o))*m)))
+		fmt.Println(fmt.Sprintf("\nShift Complete!\nTotal Deliveries: %d, Total Tips: $%.2f, Total Earning: $%.2f", len(o), t, t+(float64(len(o))*m)))
 	return
 }
 
@@ -104,9 +103,15 @@ func getTotalTips (o []Order) float64{		//Returns total of tips
 
 }
 
-func listOrders(o []Order) {		//List all orders
+func listAll(m float64, o []Order) {		//List all orders and mileage
+	fmt.Println(fmt.Sprintf("\nMileage is $%.2f", m))
+	listOrders(o)
+	return
+}
+
+func listOrders(o []Order) {		//Lists just orders
 	if len(o) == 0 {
-		fmt.Println("You haven't taken any deliveries yet!")
+		fmt.Println("You haven't taken any deliveries yet!\n")
 	} else {
 		for i := 0; i < len(o); i++ {
 			fmt.Println(fmt.Sprintf("Order #%d: $%.2f", o[i].id, o[i].tip))
