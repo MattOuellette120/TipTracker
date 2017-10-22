@@ -8,10 +8,13 @@ import (
 
 //Variable Declaration
 var mileageString string
-var totalTips float64 = 0.00
 var tipString string
+var helpString = "Command list:\nhelp		Displays this help menu\nexit		Ends the shift and displays the final totals"
+
 
 func main () {
+	orders := make([]Order, 0, 1)
+	
 	fmt.Println("\"Mileage\" refers to the amount of money, per delivery, a driver is given for gas compensation.") 
 	var mileage float64	//Declared mileage outside the loop so it can be used in the final calculation
 	for {		//Mileage input loop start
@@ -27,30 +30,60 @@ func main () {
 		}
 	}		//Mileage input loop end
 	fmt.Println(fmt.Sprintf("Mileage is $%.2f", mileage))
-	fmt.Println("Enter \"exit\" to end shift")
+	fmt.Println("Enter \"help\" for command list, enter \"exit\" to end shift.")
 	
-	for numOfDel := 1.0 ; ; numOfDel++ {
-		fmt.Println(fmt.Sprintf("Enter the tip for delivery #%.0f", numOfDel))
+	for {
+		fmt.Println("Enter the tip for delivery #", len(orders)+1)
 		fmt.Scan(&tipString)
 		cleanTipString := strings.TrimPrefix(tipString, "$")		//Same with mileage input, trims off potential $'s
-		if tipString == "exit" {		//If "exit" was entered, ends the loop and prints final totals
-			numOfDel--		//Minus one, because it would use the current loop's number otherwise
-			fmt.Println("End of shift")
-			fmt.Println(fmt.Sprintf("Number of deliveries: %.0f, Total Tips: $%.2f, Total Mileage Earned: $%.2f, Total Earnings: $%.2f", numOfDel, totalTips, numOfDel*mileage, totalTips+(mileage*numOfDel)))
+		switch {
+			case tipString == "exit":
+				clockOut(orders, mileage)
+				break
+			case tipString == "help":
+				fmt.Println(helpString)
+				break
+			default:
+				tip, err := strconv.ParseFloat(cleanTipString, 64)
+				if err == nil {
+					newOrder := Order{tip}
+					orders = append(orders, newOrder)
+					fmt.Println(fmt.Sprintf("Total Tips: $%.2f", getTotalTips(orders)))		//Handy display of current total
+				} else {
+					fmt.Println("Invalid Input")
+				}
+		}		//End of switch case
+		if tipString == "exit" {
 			break
 		}
-		tip, err := strconv.ParseFloat(cleanTipString, 64)
-		if err == nil {		//If no errors parsing in the float, adds the tip input to the running total
-			totalTips += tip
-			fmt.Println(fmt.Sprintf("Total Tips: $%.2f", totalTips))		//Handy display of current total
-		} else {
-			fmt.Println("Invalid Input")
-			numOfDel--		//If invalid input, steps back the loop
-		}
+	}		//End of tip input For Loop
+}		//End of main func
 
 
-	}
+type Order struct {		//Order struct
+	tip float64
 }
 
+func (o Order) getTip() float64 {
+	return o.tip
+}
 
+func (o Order) cancelOrder() {		//To be implemented
+	o.tip = 0.0
+	return
+}
 
+func clockOut (o []Order, m float64) {		//Clock Out function
+		t := getTotalTips(o)
+		fmt.Println(fmt.Sprintf("Shift Complete!\nTotal Deliveries: %d, Total Tips: $%.2f, Total Earning: $%.2f", len(o), t, t+(float64(len(o))*m)))
+	return
+}
+
+func getTotalTips (o []Order) float64{		//Returns total of tips
+	totalTips := 0.00
+	for i := 0; i < len(o); i++ {
+		totalTips += o[i].getTip()
+	}
+	return totalTips
+
+}
