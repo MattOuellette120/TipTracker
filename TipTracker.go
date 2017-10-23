@@ -42,10 +42,10 @@ func main () {
 				fmt.Println(helpString)
 				break
 			case inputString == "list":		//Lists everything
-				listAll(mileage, orders)
+				listOrders(orders, inputString, mileage)
 				break
 			case inputString == "update":
-				listOrders(orders, inputString)
+				listOrders(orders, inputString, mileage)
 				fmt.Scan(&inputString)
 				id, err := strconv.Atoi(inputString)
 				if err == nil {
@@ -63,7 +63,7 @@ func main () {
 				}
 				break
 			case inputString == "cancel":		//Cancel an order using order's ID
-				listOrders(orders, inputString)
+				listOrders(orders, inputString, mileage)
 				fmt.Scan(&inputString)
 				id, err := strconv.Atoi(inputString)
 				if err == nil {
@@ -121,13 +121,8 @@ func getTotalTips (o []Order) float64{		//Returns total of tips
 
 }
 
-func listAll(m float64, o []Order) {		//List all orders and mileage
-	fmt.Println(fmt.Sprintf("\nMileage is $%.2f", m))
-	listOrders(o, "")
-	return
-}
 
-func listOrders(o []Order, inputString string) {		//Lists just orders
+func listOrders(o []Order, inputString string, m float64) {		//Lists just orders
 	if len(o) == 0 {
 		fmt.Println("You haven't taken any deliveries yet!\n")
 	} else {
@@ -137,6 +132,9 @@ func listOrders(o []Order, inputString string) {		//Lists just orders
 			break
 		case inputString == "cancel":
 			fmt.Println("\nPlease input the order number of the order you'd like to cancel.")
+			break
+		case inputString == "list":
+			fmt.Println(fmt.Sprintf("\nMileage is $%.2f", m))
 			break
 		default:
 			break
