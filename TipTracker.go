@@ -8,7 +8,7 @@ import (
 
 //Variable Declaration
 var inputString string
-var helpString = "\nCommand list:\nhelp		Displays this help menu\nexit		Ends the shift and displays the final totals\nlist		Lists all current orders with ID and tip amount\ncancel		Allows user to cancel an order with its order ID. Cancelling an order sets the tip amount to $0\n"		//Help Menu
+var helpString = "\nCommand list:\nhelp		Displays this help menu\nexit		Ends the shift and displays the final totals\nlist		Lists all current orders with ID and tip amount\nupdate		Update an order's tip\ncancel		Cancel an order with its order ID. Cancelling an order sets that order's tip to $0\n"		//Help Menu
 
 
 func main () {
@@ -44,13 +44,31 @@ func main () {
 			case inputString == "list":		//Lists everything
 				listAll(mileage, orders)
 				break
-			case inputString == "cancel":		//Cancel an order using order's ID
-				fmt.Println("\nHere's a list of all deliveries made. Please input the order number of the delivery you want cancelled.")
-				listOrders(orders)
+			case inputString == "update":
+				listOrders(orders, inputString)
 				fmt.Scan(&inputString)
 				id, err := strconv.Atoi(inputString)
 				if err == nil {
-					cancelOrder(orders, id-1)
+					fmt.Println("Please input the new tip.")
+					fmt.Scan(&inputString)
+					newTip, err2 := strconv.ParseFloat(inputString, 64)
+					if err2 == nil {
+						orders[id-1].setTip(newTip)
+						fmt.Println(fmt.Sprintf("Tip for order#%d updated\nNew Total Tips:$%.2f\n", id, getTotalTips(orders)))
+					} else {
+						fmt.Println("Invalid Input\n")
+					}
+				} else {
+					fmt.Println("Invalid Input\n")
+				}
+				break
+			case inputString == "cancel":		//Cancel an order using order's ID
+				listOrders(orders, inputString)
+				fmt.Scan(&inputString)
+				id, err := strconv.Atoi(inputString)
+				if err == nil {
+					orders[id-1].setTip(0)
+					//cancelOrder(orders, id-1)
 					fmt.Println(fmt.Sprintf("Order has been cancelled\nNew Total Tips: $%.2f\n", getTotalTips(orders)))
 				} else {
 					fmt.Println("Invalid Input\n")
@@ -83,8 +101,8 @@ func (o Order) getTip() float64 {		//return tip
 	return o.tip
 }
 
-func cancelOrder(o []Order, id int) {		//Takes in the orders slice and id, sets tip to 0
-	o[id].tip = 0.0
+func (o *Order) setTip (newTip float64) {		//Updates order's tip with supplied value
+	o.tip = newTip
 	return
 }
 
@@ -105,14 +123,24 @@ func getTotalTips (o []Order) float64{		//Returns total of tips
 
 func listAll(m float64, o []Order) {		//List all orders and mileage
 	fmt.Println(fmt.Sprintf("\nMileage is $%.2f", m))
-	listOrders(o)
+	listOrders(o, "")
 	return
 }
 
-func listOrders(o []Order) {		//Lists just orders
+func listOrders(o []Order, inputString string) {		//Lists just orders
 	if len(o) == 0 {
 		fmt.Println("You haven't taken any deliveries yet!\n")
 	} else {
+		switch {
+		case inputString == "update":
+			fmt.Println("\nPlease input the order number of the tip you would like to update.")
+			break
+		case inputString == "cancel":
+			fmt.Println("\nPlease input the order number of the order you'd like to cancel.")
+			break
+		default:
+			break
+		}
 		for i := 0; i < len(o); i++ {
 			fmt.Println(fmt.Sprintf("Order #%d: $%.2f", o[i].id, o[i].tip))
 		}
