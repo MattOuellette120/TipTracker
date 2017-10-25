@@ -14,7 +14,7 @@ var helpString = "\nCommand list:\nhelp		Displays this help menu\nexit		Ends the
 func main () {
 	orders := make([]Order, 0, 1)		//Slice of all orders for the shift
 	
-	fmt.Println("\"Mileage\" refers to the amount of money, per delivery, a driver is given for gas compensation.") 
+	fmt.Println("\n\"Mileage\" refers to the amount of money, per delivery, a driver is given for gas compensation.") 
 	var mileage float64	//Declared mileage outside the loop so it can be used in the final calculation
 	for {		//Mileage input loop start
 		fmt.Println("How much is the current mileage?")
@@ -31,7 +31,7 @@ func main () {
 	fmt.Println("\nEnter \"help\" for command list, enter \"exit\" to end shift.")
 	
 	for {
-		fmt.Println("Enter the tip for delivery #", strconv.Itoa(len(orders)+1))
+		fmt.Println(fmt.Sprintf("Enter the tip for delivery #%s", strconv.Itoa(len(orders)+1)))
 		fmt.Scan(&inputString)
 		cleanInputString := strings.TrimPrefix(inputString, "$")		//Same with mileage input, trims off potential $'s
 		switch {		//Interpret different input commands
@@ -122,7 +122,7 @@ func getTotalTips (o []Order) float64{		//Returns total of tips
 }
 
 
-func listOrders(o []Order, inputString string, m float64) {		//Lists just orders
+func listOrders(o []Order, inputString string, m float64) {		//Lists orders and command-specific prompt
 	if len(o) == 0 {
 		fmt.Println("You haven't taken any deliveries yet!\n")
 	} else {
